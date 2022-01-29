@@ -13,8 +13,11 @@ import ProductOverviewScreen from './screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from "./screens/shop/ProductDetailScreen";
 import CartScreen from './screens/shop/CartScreen';
 import OrdersScreen from "./screens/shop/OrdersScreen";
+import UserProductScreen from "./screens/user/UserProductsScreen";
+import EditProductScreen from "./screens/user/EditProductScreen";
 
 import AppBarHeader from "./components/UI/AppBarNav";
+import AppBarBottom from "./components/UI/AppBarBottom";
 
 import productsReducer from "./store/reducers/products";
 import cartReducer from "./store/reducers/cart";
@@ -63,7 +66,9 @@ export default function App() {
             <Stack.Screen name="All Products" component={ProductOverviewScreen} />
             <Stack.Screen name="Product Details" component={ProductDetailScreen} />
             <Stack.Screen name="Cart" component={CartScreen} />
-            <Stack.Screen name="Order" component={OrdersScreen} />
+            <Stack.Screen name="Orders" component={OrdersScreen} />
+            <Stack.Screen name="User Products" component={UserProductScreen} />
+            <Stack.Screen name="Edit Product" component={EditProductScreen} />
           </Stack.Navigator>
         </Provider>
       </PaperProvider>

@@ -1,6 +1,7 @@
 import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions/cart";
 import CartItem from "../../models/cart-item";
 import { ADD_ORDER } from "../actions/order";
+import { DELETE_PRODUCT } from "../actions/products";
 
 const initialState = {
   items: {},
@@ -15,13 +16,13 @@ export default (state = initialState, action) => {
       const productTitle = addedProduct.title;
 
       let updatedOrNewCartItem;
-      
+
       if (state.items[addedProduct.id]) {
         updatedOrNewCartItem = new CartItem(
           state.items[addedProduct.id].quanity + 1,
           productPrice,
           productTitle,
-          state.items[addedProduct.id].sum + productPrice,
+          state.items[addedProduct.id].sum + productPrice
         );
       } else {
         updatedOrNewCartItem = new CartItem(
@@ -45,9 +46,9 @@ export default (state = initialState, action) => {
           selectedCartItem.quanity - 1,
           selectedCartItem.productPrice,
           selectedCartItem.productTitle,
-          selectedCartItem.sum - selectedCartItem.productPrice,
+          selectedCartItem.sum - selectedCartItem.productPrice
         );
-        updatedCartItems = {...state.items, [action.pid]: updateCartItem };
+        updatedCartItems = { ...state.items, [action.pid]: updateCartItem };
       } else {
         updatedCartItems = { ...state.items };
         delete updatedCartItems[action.pid];
@@ -56,9 +57,21 @@ export default (state = initialState, action) => {
         ...state,
         items: updatedCartItems,
         totalAmount: state.totalAmount - selectedCartItem.productPrice,
-      }
+      };
     case ADD_ORDER:
       return initialState;
+    case DELETE_PRODUCT:
+      if (!state.items[action.pid]) {
+        return state;
+      }
+      const updatedItems = { ...state.items };
+      const itemTotal = state.items[action.pid].sum;
+      delete updatedItems[action.pid];
+      return {
+        ...state,
+        items: updatedItems,
+        totalAmount: state.totalAmount - itemTotal,
+      };
   }
   return state;
 };

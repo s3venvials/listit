@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "react-native-paper";
 import { ScrollView, View, Text, Image, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as cartActions from '../../store/actions/cart';
 
+import SnackBarAlert from "../../components/UI/SnackBarAlert";
+
 const ProductDetailScreen = (props) => {
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("");
   const productId = props.route.params.productId;
   const selectedProduct = useSelector((state) =>
     state.products.availableProducts.find((prod) => prod.id === productId)
@@ -17,12 +21,15 @@ const ProductDetailScreen = (props) => {
           <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
           <View style={styles.actions}>
           <Button mode="outlined" onPress={() => {
+            setVisible(true);
+            setMessage(`Added ${selectedProduct.title} to the cart!`);
             dispatch(cartActions.addToCart(selectedProduct));
           }}>Add to Cart</Button>
           </View>
           <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
           <Text style={styles.description}>{selectedProduct.description}</Text>
       </ScrollView>
+      <SnackBarAlert visible={visible} setVisible={setVisible} message={message} sx={{ backgroundColor: 'green', color: 'white' }} />
     </View>
   );
 };

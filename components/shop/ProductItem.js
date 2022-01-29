@@ -6,9 +6,9 @@ import {
   Platform,
   View,
 } from "react-native";
-import { Button, Card, Title, Paragraph, Surface } from "react-native-paper";
+import { Card, Title, Paragraph, Surface } from "react-native-paper";
 
-const ProductItem = ({ product, onViewDetail, onAddToCart }) => {
+const ProductItem = ({ product, onSelect, children }) => {
   let TouchableCmp = TouchableOpacity;
 
   if (Platform.OS === "android" && Platform.Version >= 21) {
@@ -17,7 +17,7 @@ const ProductItem = ({ product, onViewDetail, onAddToCart }) => {
 
   return (
     <View>
-      <TouchableCmp onPress={onViewDetail} useForeground>
+      <TouchableCmp onPress={onSelect} useForeground>
         <Surface style={styles.surface}>
           <Card.Cover source={{ uri: product.imageUrl }} />
           <Card.Content style={styles.content}>
@@ -27,12 +27,7 @@ const ProductItem = ({ product, onViewDetail, onAddToCart }) => {
             </Paragraph>
           </Card.Content>
           <Card.Actions style={styles.actions}>
-            <Button mode="outlined" onPress={onViewDetail}>
-              Details
-            </Button>
-            <Button mode="outlined" onPress={onAddToCart}>
-              Add To Cart
-            </Button>
+            {children}
           </Card.Actions>
         </Surface>
       </TouchableCmp>
