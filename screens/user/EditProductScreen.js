@@ -1,8 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import { Surface, Button, TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import * as productsActions from "../../store/actions/products";
+
+const FORM_UPDATE = "UPDATE";
+
+const formReducer = (state, action) => {
+  if (action.type === FORM_UPDATE) {
+    const updatedValues = {
+      ...state.inputValues,
+      [action.input]: action.value,
+    };
+
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+
+    let updatedFormIsValid = true;
+
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
+
+    return {
+      formIsValid: updatedFormIsValid,
+      inputValidities: updatedValidities,
+      inputValues: updatedValues,
+    };
+  }
+  return state;
+};
 
 const EditProductScreen = ({ navigation, route }) => {
   const prodId = route.params.productId;
@@ -17,26 +46,53 @@ const EditProductScreen = ({ navigation, route }) => {
   const navParams =
     navigation.getState().routes[navigation.getState().index].params;
 
-  const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
-  const [imageUrl, setimageUrl] = useState(
-    editedProduct ? editedProduct.imageUrl : ""
-  );
-  const [price, setPrice] = useState("");
-  const [desc, setDesc] = useState(
-    editedProduct ? editedProduct.description : ""
-  );
+  const [formIsSubmitted, setFormIsSubmitted] = useState(false);
+
   const dispatch = useDispatch();
 
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      title: editedProduct ? editedProduct.title : "",
+      imageUrl: editedProduct ? editedProduct.imageUrl : "",
+      desc: editedProduct ? editedProduct.description : "",
+      price: "",
+    },
+    inputValidities: {
+      title: editedProduct ? true : false,
+      imageUrl: editedProduct ? true : false,
+      desc: editedProduct ? true : false,
+      price: editedProduct ? true : false,
+    },
+    formIsValid: editedProduct ? true : false,
+  });
+
   const submitHandler = () => {
+    setFormIsSubmitted(true);
+    if (!formState.formIsValid) {
+      return;
+    }
+
     let message;
-    if (editedProduct) {
-      message = `Edited ${title} successfully!`;
+    const { title, desc, imageUrl, price } = formState.inputValues;
+
+    if (formState.formIsValid) {
+      message = `Edited ${formState.inputValues.title} successfully!`;
       dispatch(productsActions.updateProduct(prodId, title, desc, imageUrl));
     } else {
-      message = `Added ${title} successfully!`;
+      message = `Added ${formState.inputValues.title} successfully!`;
       dispatch(productsActions.createProduct(title, desc, imageUrl, +price));
     }
     navigation.navigate("User Products", { message });
+  };
+
+  const textChangeHandler = (name, value) => {
+    let isValid = false;
+
+    if (value.trim().length > 0) {
+      isValid = true;
+    }
+
+    dispatchFormState({ type: FORM_UPDATE, value, isValid, input: name });
   };
 
   return (
@@ -50,24 +106,37 @@ const EditProductScreen = ({ navigation, route }) => {
             style={styles.input}
             mode="outlined"
             label="Title"
-            value={title}
-            onChangeText={(text) => setTitle(text)}
+            value={formState.inputValues.title}
+            onChangeText={textChangeHandler.bind(this, "title")}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
           />
+          {!formState.inputValidities.title && formIsSubmitted && (
+            <Text style={{ color: "red" }}>Please enter a valid title</Text>
+          )}
           <TextInput
             style={styles.input}
             mode="outlined"
             label="Image URL"
-            value={imageUrl}
-            onChangeText={(text) => setimageUrl(text)}
+            value={formState.inputValues.imageUrl}
+            onChangeText={textChangeHandler.bind(this, "imageUrl")}
           />
+          {!formState.inputValidities.imageUrl && formIsSubmitted && (
+            <Text style={{ color: "red" }}>Please add an image</Text>
+          )}
           {editedProduct ? null : (
             <TextInput
               style={styles.input}
               mode="outlined"
               label="Price"
-              value={price}
-              onChangeText={(text) => setPrice(text)}
+              value={formState.inputValues.price}
+              onChangeText={textChangeHandler.bind(this, "price")}
+              keyboardType="decimal-pad"
             />
+          )}
+           {!formState.inputValidities.price && formIsSubmitted && (
+            <Text style={{ color: "red" }}>Please enter a valid price</Text>
           )}
           <TextInput
             style={styles.input}
@@ -75,9 +144,15 @@ const EditProductScreen = ({ navigation, route }) => {
             label="Description"
             multiline
             numberOfLines={10}
-            value={desc}
-            onChangeText={(text) => setDesc(text)}
+            value={formState.inputValues.desc}
+            onChangeText={textChangeHandler.bind(this, "desc")}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
           />
+           {!formState.inputValidities.desc && formIsSubmitted && (
+            <Text style={{ color: "red", marginBottom: 10 }}>Please enter a description</Text>
+          )}
           <Button mode="contained" icon="send" onPress={submitHandler}>
             Submit
           </Button>
