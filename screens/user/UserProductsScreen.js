@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, FlatList } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { Button } from "react-native-paper";
+import { Button, Colors } from "react-native-paper";
 import * as productsActions from "../../store/actions/products";
 
 import ProductItem from "../../components/shop/ProductItem";
@@ -47,12 +47,14 @@ const UserProductScreen = ({ navigation, route }) => {
             onSelect={() => editProductHandler(itemData.item.id)}
           >
             <Button
+              color={Colors.blue500}
               mode="outlined"
               onPress={() => editProductHandler(itemData.item.id, "Edit")}
             >
               Edit
             </Button>
             <Button
+              color={Colors.blue500}
               mode="outlined"
               onPress={() => {
                 setShowModal(true);
@@ -68,7 +70,10 @@ const UserProductScreen = ({ navigation, route }) => {
           </ProductItem>
         )}
       />
-      <FabBtn onAdd={() => editProductHandler(null, "Add")} />
+      <FabBtn
+        onAdd={() => editProductHandler(null, "Add")}
+        sx={{ marginTop: userProducts.length > 0 ? 0 : "20%" }}
+      />
       <SnackBarAlert
         visible={visible}
         setVisible={setVisible}

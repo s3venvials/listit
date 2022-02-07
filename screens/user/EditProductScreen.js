@@ -1,6 +1,6 @@
 import React, { useState, useReducer } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { Surface, Button, TextInput } from "react-native-paper";
+import { Surface, Button, TextInput, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import * as productsActions from "../../store/actions/products";
 
@@ -75,7 +75,7 @@ const EditProductScreen = ({ navigation, route }) => {
     let message;
     const { title, desc, imageUrl, price } = formState.inputValues;
 
-    if (formState.formIsValid) {
+    if (editedProduct) {
       message = `Edited ${formState.inputValues.title} successfully!`;
       dispatch(productsActions.updateProduct(prodId, title, desc, imageUrl));
     } else {
@@ -153,7 +153,7 @@ const EditProductScreen = ({ navigation, route }) => {
            {!formState.inputValidities.desc && formIsSubmitted && (
             <Text style={{ color: "red", marginBottom: 10 }}>Please enter a description</Text>
           )}
-          <Button mode="contained" icon="send" onPress={submitHandler}>
+          <Button color={Colors.blue500} mode="contained" icon="send" onPress={submitHandler}>
             Submit
           </Button>
         </Surface>

@@ -1,9 +1,8 @@
 import React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { Button, Surface } from "react-native-paper";
+import { Button, Surface, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 
-import Colors from "../../constants/Colors";
 import CartItem from "../../components/shop/CartItem";
 import * as cartActions from "../../store/actions/cart";
 import * as orderActions from "../../store/actions/order";
@@ -35,6 +34,7 @@ const CartScreen = (props) => {
           <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
         </Text>
         <Button
+        color={Colors.blue500}
           mode="outlined"
           disabled={cartItems.length === 0}
           onPress={() => dispatch(orderActions.addOrder(cartItems, cartTotalAmount))}
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   amount: {
-    color: Colors.accent,
+    color: Colors.yellow700,
   },
 });
 

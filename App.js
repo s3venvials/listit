@@ -1,13 +1,13 @@
 import "react-native-gesture-handler";
 import React, { useState } from "react";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
-import { composeWithDevTools } from "redux-devtools-extension";
+import ReduxThunk from "redux-thunk";
 
 import ProductOverviewScreen from './screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from "./screens/shop/ProductDetailScreen";
@@ -29,8 +29,7 @@ const rootReducer = combineReducers({
   orders: ordersReducer,
 });
 
-// remove composeWithDevTools before releasing to prod.
-const store = createStore(rootReducer, composeWithDevTools());
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 const fetchFont = async () => {
   await Font.loadAsync({

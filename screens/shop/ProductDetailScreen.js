@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button } from "react-native-paper";
+import { Button, Colors } from "react-native-paper";
 import { ScrollView, View, Text, Image, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as cartActions from '../../store/actions/cart';
@@ -20,7 +20,7 @@ const ProductDetailScreen = (props) => {
       <ScrollView>
           <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
           <View style={styles.actions}>
-          <Button mode="outlined" onPress={() => {
+          <Button mode="outlined" color={Colors.blue500} onPress={() => {
             setVisible(true);
             setMessage(`Added ${selectedProduct.title} to the cart!`);
             dispatch(cartActions.addToCart(selectedProduct));
