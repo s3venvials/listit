@@ -9,11 +9,12 @@ const SnackBarAlert = ({ visible, setVisible, message, sx }) => {
   return (
     <View style={styles.container}>
       <Snackbar
+        theme={({ colors: { surface: 'white', accent: 'white' } })}
         style={sx}
         visible={visible}
         onDismiss={onDismissSnackBar}
         action={{
-          icon: "close-circle",
+          label: "CLOSE",
           onPress: () => setVisible(false),
         }}>
         {message}

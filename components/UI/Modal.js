@@ -1,6 +1,6 @@
 import * as React from "react";
 import { View } from "react-native";
-import { Button, Paragraph, Dialog, Portal } from "react-native-paper";
+import { Button, Paragraph, Dialog, Portal, Colors } from "react-native-paper";
 
 const MyComponent = ({ visible, setVisible, onConfirm, title, content }) => {
   const hideDialog = () => setVisible(false);
@@ -18,8 +18,8 @@ const MyComponent = ({ visible, setVisible, onConfirm, title, content }) => {
             <Paragraph>{content}</Paragraph>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={hideDialog}>Cancel</Button>
-            <Button onPress={confirmDelete}>Confirm</Button>
+            <Button color={Colors.blue500} onPress={hideDialog}>Cancel</Button>
+            <Button color={Colors.blue500} onPress={confirmDelete}>Confirm</Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>

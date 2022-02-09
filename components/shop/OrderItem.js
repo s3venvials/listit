@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { Button, Surface } from "react-native-paper";
+import { Button, Colors, Surface } from "react-native-paper";
 import CartItem from "./CartItem";
 
 const OrderItem = ({ amount, date, items }) => {
@@ -15,6 +15,7 @@ const OrderItem = ({ amount, date, items }) => {
         </View>
         <Button
           mode="text"
+          color={Colors.blue500}
           onPress={() => setShowDetails((prevState) => !prevState)}
         >
           {showDetails ? "Hide Details" : "Show Details"}

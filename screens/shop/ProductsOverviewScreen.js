@@ -11,6 +11,7 @@ import * as productActions from "../../store/actions/products";
 
 const ProductOverviewScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -19,14 +20,14 @@ const ProductOverviewScreen = ({ navigation }) => {
 
   const loadProducts = useCallback(async () => {
     setError("");
-    setIsLoading(true);
+    setIsRefreshing(true);
     setTimeout(async () => {
       try {
         await dispatch(productActions.fetchProducts());
       } catch (error) {
         setError(error.message);
       }
-      setIsLoading(false);
+      setIsRefreshing(false);
     }, 600);
   }, [dispatch]);
 
@@ -39,7 +40,8 @@ const ProductOverviewScreen = ({ navigation }) => {
   }, [loadProducts]);
 
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts().then(() => setIsLoading(false));
   }, [dispatch, loadProducts]);
 
   const selectItemHandler = (id, title) => {
@@ -101,6 +103,8 @@ const ProductOverviewScreen = ({ navigation }) => {
   return (
     <View>
       <FlatList
+        onRefresh={loadProducts}
+        refreshing={isRefreshing}
         data={products}
         keyExtractor={(item) => item.id}
         renderItem={(itemData) => (

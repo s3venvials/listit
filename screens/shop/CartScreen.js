@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { Button, Surface, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 
 import CartItem from "../../components/shop/CartItem";
+import SnackBarAlert from "../../components/UI/SnackBarAlert";
+
 import * as cartActions from "../../store/actions/cart";
 import * as orderActions from "../../store/actions/order";
 
 const CartScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const [message, setMessage] = useState("");
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
   const cartItems = useSelector((state) => {
     const transFormedCartItems = [];
@@ -26,6 +31,22 @@ const CartScreen = (props) => {
   });
   const dispatch = useDispatch();
 
+  const orderNowHandler = async () => {
+    setIsLoading(true);
+    setTimeout(async () => {
+      await dispatch(orderActions.addOrder(cartItems, cartTotalAmount));
+      setIsLoading(false);
+      setVisible(true);
+      setMessage("Your order was successfully placed!");
+    }, 3000);
+  };
+
+  const deleteCartItemHandler = async (id) => {
+    await dispatch(cartActions.removeFromCart(id));
+    setVisible(true);
+    setMessage("Product was removed from your cart!");
+  };
+
   return (
     <View style={styles.screen}>
       <Surface style={styles.summary}>
@@ -34,10 +55,11 @@ const CartScreen = (props) => {
           <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
         </Text>
         <Button
-        color={Colors.blue500}
+          color={Colors.blue500}
           mode="outlined"
-          disabled={cartItems.length === 0}
-          onPress={() => dispatch(orderActions.addOrder(cartItems, cartTotalAmount))}
+          loading={isLoading}
+          disabled={cartItems.length === 0 || isLoading}
+          onPress={orderNowHandler}
         >
           Order Now
         </Button>
@@ -51,11 +73,15 @@ const CartScreen = (props) => {
             title={itemData.item.productTitle}
             amount={itemData.item.sum}
             deletable
-            onRemove={() => {
-              dispatch(cartActions.removeFromCart(itemData.item.productId));
-            }}
+            onRemove={deleteCartItemHandler.bind(this, itemData.item.productId)}
           />
         )}
+      />
+      <SnackBarAlert
+        visible={visible}
+        setVisible={setVisible}
+        message={message}
+        sx={{ backgroundColor: "green", color: "white" }}
       />
     </View>
   );
