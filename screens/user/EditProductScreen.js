@@ -66,7 +66,7 @@ const EditProductScreen = ({ navigation, route }) => {
     formIsValid: editedProduct ? true : false,
   });
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     setFormIsSubmitted(true);
     if (!formState.formIsValid) {
       return;
@@ -77,7 +77,12 @@ const EditProductScreen = ({ navigation, route }) => {
 
     if (editedProduct) {
       message = `Edited ${formState.inputValues.title} successfully!`;
-      dispatch(productsActions.updateProduct(prodId, title, desc, imageUrl));
+      try {
+        await dispatch(productsActions.updateProduct(prodId, title, desc, imageUrl));
+      } catch (error) {
+        alert(error);
+        return;
+      }
     } else {
       message = `Added ${formState.inputValues.title} successfully!`;
       dispatch(productsActions.createProduct(title, desc, imageUrl, +price));

@@ -6,7 +6,8 @@ export const UPDATE_PRODUCT = "UPDATE_PRODUCT";
 export const SET_PRODUCTS = "SET_PRODUCTS";
 
 export const fetchProducts = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
     try {
       const response = await fetch(
         "https://listit-1358-default-rtdb.firebaseio.com/products.json"
@@ -23,7 +24,7 @@ export const fetchProducts = () => {
         loadedProducts.push(
           new Product(
             key,
-            "u1",
+            resData[key].ownerId,
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
@@ -32,7 +33,11 @@ export const fetchProducts = () => {
         );
       }
 
-      dispatch({ type: SET_PRODUCTS, products: loadedProducts });
+      dispatch({
+        type: SET_PRODUCTS,
+        products: loadedProducts,
+        userProducts: loadedProducts.filter((prod) => prod.ownerId === userId),
+      });
     } catch (error) {
       // send to custom analytics server
       throw error;
@@ -41,9 +46,10 @@ export const fetchProducts = () => {
 };
 
 export const deleteProduct = (productId) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     await fetch(
-      `https://listit-1358-default-rtdb.firebaseio.com/products/${productId}.json`,
+      `https://listit-1358-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,
       { method: "DELETE" }
     );
 
@@ -52,13 +58,21 @@ export const deleteProduct = (productId) => {
 };
 
 export const createProduct = (title, description, imageUrl, price) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const response = await fetch(
-      "https://listit-1358-default-rtdb.firebaseio.com/products.json",
+      `https://listit-1358-default-rtdb.firebaseio.com/products.json?auth=${token}`,
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, imageUrl, price }),
+        body: JSON.stringify({
+          title,
+          description,
+          imageUrl,
+          price,
+          ownerId: userId,
+        }),
       }
     );
 
@@ -66,26 +80,43 @@ export const createProduct = (title, description, imageUrl, price) => {
 
     dispatch({
       type: CREATE_PRODUCT,
-      productData: { id: resData.name, title, description, imageUrl, price },
+      productData: {
+        id: resData.name,
+        title,
+        description,
+        imageUrl,
+        price,
+        ownerId: userId,
+      },
     });
   };
 };
 
 export const updateProduct = (id, title, description, imageUrl) => {
-  return async (dispatch) => {
-    await fetch(
-      `https://listit-1358-default-rtdb.firebaseio.com/products/${id}.json`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, imageUrl }),
-      }
-    );
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    try {
+      const response = await fetch(
+        `https://listit-1358-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, description, imageUrl }),
+        }
+      );
 
-    dispatch({
-      type: UPDATE_PRODUCT,
-      pid: id,
-      productData: { title, description, imageUrl },
-    });
+      if (!response.ok) {
+        throw new Error("Something went wrong!");
+      }
+
+      dispatch({
+        type: UPDATE_PRODUCT,
+        pid: id,
+        productData: { title, description, imageUrl },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   };
 };

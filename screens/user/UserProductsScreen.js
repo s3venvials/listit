@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, FlatList } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Colors } from "react-native-paper";
+import { Button, Colors, Text } from "react-native-paper";
 import * as productsActions from "../../store/actions/products";
 
 import ProductItem from "../../components/shop/ProductItem";
@@ -37,58 +37,74 @@ const UserProductScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View>
-      <FlatList
-        data={userProducts}
-        keyExtractor={(item) => item.id}
-        renderItem={(itemData) => (
-          <ProductItem
-            product={itemData.item}
-            onSelect={() => editProductHandler(itemData.item.id)}
-          >
-            <Button
-              color={Colors.blue500}
-              mode="outlined"
-              onPress={() => editProductHandler(itemData.item.id, "Edit")}
+    <>
+      <View>
+        <FlatList
+          data={userProducts}
+          keyExtractor={(item) => item.id}
+          renderItem={(itemData) => (
+            <ProductItem
+              key={itemData.item.id}
+              product={itemData.item}
+              onSelect={() => editProductHandler(itemData.item.id)}
             >
-              Edit
-            </Button>
-            <Button
-              color={Colors.blue500}
-              mode="outlined"
-              onPress={() => {
-                setShowModal(true);
-                setProductId(itemData.item.id);
-                setModalTitle("Confirm Delete");
-                setModalContent(
-                  `Are you sure you want to delete the product ${itemData.item.title}?`
-                );
-              }}
-            >
-              Delete
-            </Button>
-          </ProductItem>
+              <Button
+                color={Colors.blue500}
+                mode="outlined"
+                onPress={() => editProductHandler(itemData.item.id, "Edit")}
+              >
+                Edit
+              </Button>
+              <Button
+                color={Colors.blue500}
+                mode="outlined"
+                onPress={() => {
+                  setShowModal(true);
+                  setProductId(itemData.item.id);
+                  setModalTitle("Confirm Delete");
+                  setModalContent(
+                    `Are you sure you want to delete the product ${itemData.item.title}?`
+                  );
+                }}
+              >
+                Delete
+              </Button>
+            </ProductItem>
+          )}
+        />
+        <FabBtn
+          onAdd={() => editProductHandler(null, "Add")}
+          sx={{ marginTop: userProducts.length > 0 ? 0 : "20%" }}
+        />
+        <SnackBarAlert
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
+          sx={{ backgroundColor: "green", color: "white" }}
+        />
+        <Modal
+          visible={showModal}
+          setVisible={setShowModal}
+          onConfirm={() => deleteProductHandler(productId)}
+          title={modalTitle}
+          content={modalContent}
+        />
+      </View>
+      <View style={styles.centered}>
+        {userProducts.length === 0 && (
+          <Text>Nothing here, select the plus icon to get started!</Text>
         )}
-      />
-      <FabBtn
-        onAdd={() => editProductHandler(null, "Add")}
-        sx={{ marginTop: userProducts.length > 0 ? 0 : "20%" }}
-      />
-      <SnackBarAlert
-        visible={visible}
-        setVisible={setVisible}
-        message={message}
-        sx={{ backgroundColor: "green", color: "white" }}
-      />
-      <Modal
-        visible={showModal}
-        setVisible={setShowModal}
-        onConfirm={() => deleteProductHandler(productId)}
-        title={modalTitle}
-        content={modalContent}
-      />
-    </View>
+      </View>
+    </>
   );
 };
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
 
 export default UserProductScreen;

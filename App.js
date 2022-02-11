@@ -9,6 +9,7 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import ReduxThunk from "redux-thunk";
 
+import AuthScreen from "./screens/user/AuthScreen";
 import ProductOverviewScreen from './screens/shop/ProductsOverviewScreen';
 import ProductDetailScreen from "./screens/shop/ProductDetailScreen";
 import CartScreen from './screens/shop/CartScreen';
@@ -22,11 +23,13 @@ import AppBarBottom from "./components/UI/AppBarBottom";
 import productsReducer from "./store/reducers/products";
 import cartReducer from "./store/reducers/cart";
 import ordersReducer from "./store/reducers/order";
+import authReducer from "./store/reducers/auth";
 
 const rootReducer = combineReducers({
   products: productsReducer,
   cart: cartReducer,
   orders: ordersReducer,
+  auth: authReducer,
 });
 
 const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
@@ -59,9 +62,10 @@ export default function App() {
     <NavigationContainer>
       <PaperProvider>
         <Provider store={store}>
-          <Stack.Navigator initialRouteName="All Products" screenOptions={{
+          <Stack.Navigator initialRouteName="Auth Login" screenOptions={{
             header: AppBarHeader,
           }}>
+            <Stack.Screen name="Auth Login" component={AuthScreen} />
             <Stack.Screen name="All Products" component={ProductOverviewScreen} />
             <Stack.Screen name="Product Details" component={ProductDetailScreen} />
             <Stack.Screen name="Cart" component={CartScreen} />

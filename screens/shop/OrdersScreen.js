@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
-import { ActivityIndicator, Colors } from "react-native-paper";
+import { ActivityIndicator, Colors, Text } from "react-native-paper";
 
 import OrderItem from "../../components/shop/OrderItem";
 
@@ -31,6 +31,14 @@ const OrderScreen = () => {
         />
       </View>
     );
+  }
+
+  if (!isLoading && orders.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>Nothing here, go find some cool stuff!</Text>
+      </View>
+    )
   }
 
   return (

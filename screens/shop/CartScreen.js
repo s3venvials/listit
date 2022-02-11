@@ -31,13 +31,18 @@ const CartScreen = (props) => {
   });
   const dispatch = useDispatch();
 
-  const orderNowHandler = async () => {
+  const orderNowHandler = () => {
     setIsLoading(true);
     setTimeout(async () => {
-      await dispatch(orderActions.addOrder(cartItems, cartTotalAmount));
-      setIsLoading(false);
-      setVisible(true);
-      setMessage("Your order was successfully placed!");
+      try {
+        await dispatch(orderActions.addOrder(cartItems, cartTotalAmount));
+        setIsLoading(false);
+        setVisible(true);
+        setMessage("Your order was successfully placed!");
+      } catch (error) {
+        setIsLoading(false);
+        alert(error);
+      }
     }, 3000);
   };
 
