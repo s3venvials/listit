@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Appbar, Menu, Colors } from "react-native-paper";
+import { Appbar, Menu, Badge, Colors } from "react-native-paper";
 import { View, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useSelector } from "react-redux";
 
 const MORE_ICON = Platform.OS === "ios" ? "dots-horizontal" : "dots-vertical";
 
@@ -14,6 +15,14 @@ const AppBarHeader = ({ navigation, back }) => {
   const navName =
     navigation.getState().routes[navigation.getState().index].name;
   const user = useRef();
+
+  const cartItemsCount = useSelector((state) => {
+    let count = 0;
+    for (const key in state.cart.items) {
+      count += state.cart.items[key].quanity;
+    }
+    return count;
+  });
 
   useEffect(() => {
     const getUser = async () => {
@@ -30,7 +39,23 @@ const AppBarHeader = ({ navigation, back }) => {
             <Appbar.BackAction onPress={_goBack} />
           )}
           <Appbar.Content title="List It" subtitle={navName} />
-          {user.current && <Appbar.Action icon="cart" onPress={_goToCart} />}
+          {user.current && (
+            <View>
+              <Badge
+                visible={cartItemsCount > 0}
+                size={20}
+                style={{
+                  position: "absolute",
+                  top: 3,
+                  right: 3,
+                  backgroundColor: Colors.blue500,
+                }}
+              >
+                {cartItemsCount}
+              </Badge>
+              <Appbar.Action icon="cart" onPress={_goToCart} />
+            </View>
+          )}
           {user.current && (
             <Menu
               style={{

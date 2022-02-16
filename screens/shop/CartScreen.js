@@ -10,7 +10,7 @@ import SnackBarAlert from "../../components/UI/SnackBarAlert";
 import * as cartActions from "../../store/actions/cart";
 import * as orderActions from "../../store/actions/order";
 
-const CartScreen = (props) => {
+const CartScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState("");
