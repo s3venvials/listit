@@ -8,6 +8,7 @@ import ProductItem from "../../components/shop/ProductItem";
 import FabBtn from "../../components/UI/FabBtn";
 import SnackBarAlert from "../../components/UI/SnackBarAlert";
 import Modal from "../../components/UI/Modal";
+import AppBarBottom from "../../components/UI/AppBarBottom";
 
 const UserProductScreen = ({ navigation, route }) => {
   const [visible, setVisible] = useState(false);
@@ -38,7 +39,7 @@ const UserProductScreen = ({ navigation, route }) => {
 
   return (
     <>
-      <View>
+      <View style={styles.screen}>
         <FlatList
           data={userProducts}
           keyExtractor={(item) => item.id}
@@ -95,11 +96,15 @@ const UserProductScreen = ({ navigation, route }) => {
           <Text>Nothing here, select the plus icon to get started!</Text>
         )}
       </View>
+      <AppBarBottom />
     </>
   );
 };
 
 const styles = StyleSheet.create({
+  screen: {
+    marginBottom: 76,
+  },
   centered: {
     flex: 1,
     justifyContent: "center",

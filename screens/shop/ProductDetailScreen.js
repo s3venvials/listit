@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import * as cartActions from '../../store/actions/cart';
 
 import SnackBarAlert from "../../components/UI/SnackBarAlert";
+import AppBarBottom from "../../components/UI/AppBarBottom";
 
 const ProductDetailScreen = (props) => {
   const [visible, setVisible] = useState(false);
@@ -16,7 +17,7 @@ const ProductDetailScreen = (props) => {
   const dispatch = useDispatch();
 
   return (
-    <View>
+    <View style={{ height: '100%' }}>
       <ScrollView>
           <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
           <View style={styles.actions}>
@@ -30,6 +31,7 @@ const ProductDetailScreen = (props) => {
           <Text style={styles.description}>{selectedProduct.description}</Text>
       </ScrollView>
       <SnackBarAlert visible={visible} setVisible={setVisible} message={message} sx={{ backgroundColor: 'green', color: 'white' }} />
+      <AppBarBottom />
     </View>
   );
 };

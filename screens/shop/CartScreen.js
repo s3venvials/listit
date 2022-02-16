@@ -4,6 +4,7 @@ import { Button, Surface, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 
 import CartItem from "../../components/shop/CartItem";
+import AppBarBottom from "../../components/UI/AppBarBottom";
 import SnackBarAlert from "../../components/UI/SnackBarAlert";
 
 import * as cartActions from "../../store/actions/cart";
@@ -54,53 +55,61 @@ const CartScreen = (props) => {
 
   return (
     <View style={styles.screen}>
-      <Surface style={styles.summary}>
-        <Text style={styles.summaryText}>
-          Total:{" "}
-          <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
-        </Text>
-        <Button
-          color={Colors.blue500}
-          mode="outlined"
-          loading={isLoading}
-          disabled={cartItems.length === 0 || isLoading}
-          onPress={orderNowHandler}
-        >
-          Order Now
-        </Button>
-      </Surface>
-      <FlatList
-        data={cartItems}
-        keyExtractor={(item) => item.productId}
-        renderItem={(itemData) => (
-          <CartItem
-            quanity={itemData.item.quanity}
-            title={itemData.item.productTitle}
-            amount={itemData.item.sum}
-            deletable
-            onRemove={deleteCartItemHandler.bind(this, itemData.item.productId)}
-          />
-        )}
-      />
-      <SnackBarAlert
-        visible={visible}
-        setVisible={setVisible}
-        message={message}
-        sx={{ backgroundColor: "green", color: "white" }}
-      />
+      <View style={styles.wrapper}>
+        <Surface style={styles.summary}>
+          <Text style={styles.summaryText}>
+            Total:{" "}
+            <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
+          </Text>
+          <Button
+            color={Colors.blue500}
+            mode="outlined"
+            loading={isLoading}
+            disabled={cartItems.length === 0 || isLoading}
+            onPress={orderNowHandler}
+          >
+            Order Now
+          </Button>
+        </Surface>
+        <FlatList
+          data={cartItems}
+          keyExtractor={(item) => item.productId}
+          renderItem={(itemData) => (
+            <CartItem
+              quanity={itemData.item.quanity}
+              title={itemData.item.productTitle}
+              amount={itemData.item.sum}
+              deletable
+              onRemove={deleteCartItemHandler.bind(
+                this,
+                itemData.item.productId
+              )}
+            />
+          )}
+        />
+        <SnackBarAlert
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
+          sx={{ backgroundColor: "green", color: "white" }}
+        />
+      </View>
+      <AppBarBottom />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   screen: {
-    margin: 20,
+    height: "100%",
+  },
+  wrapper: {
+    margin: 12,
   },
   summary: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20,
     padding: 10,
     elevation: 6,
   },

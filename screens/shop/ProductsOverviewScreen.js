@@ -8,6 +8,7 @@ import SnackBarAlert from "../../components/UI/SnackBarAlert";
 import ProductItem from "../../components/shop/ProductItem";
 import * as cartActions from "../../store/actions/cart";
 import * as productActions from "../../store/actions/products";
+import AppBarBottom from "../../components/UI/AppBarBottom";
 
 const ProductOverviewScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,7 +24,7 @@ const ProductOverviewScreen = ({ navigation }) => {
     setIsRefreshing(true);
     setTimeout(async () => {
       try {
-        await dispatch(productActions.fetchProducts());
+        dispatch(productActions.fetchProducts());
       } catch (error) {
         setError(error.message);
       }
@@ -32,11 +33,11 @@ const ProductOverviewScreen = ({ navigation }) => {
   }, [dispatch]);
 
   useEffect(() => {
-    const willFocusSub = navigation.addListener('focus', loadProducts);
+    const willFocusSub = navigation.addListener("focus", loadProducts);
 
     return () => {
       willFocusSub;
-    }
+    };
   }, [loadProducts]);
 
   useEffect(() => {
@@ -103,6 +104,7 @@ const ProductOverviewScreen = ({ navigation }) => {
   return (
     <View>
       <FlatList
+        style={styles.fixedList}
         onRefresh={loadProducts}
         refreshing={isRefreshing}
         data={products}
@@ -143,11 +145,15 @@ const ProductOverviewScreen = ({ navigation }) => {
         message={message}
         sx={{ backgroundColor: "green", color: "white" }}
       />
+      <AppBarBottom />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  fixedList: {
+    marginBottom: 76,
+  },
   centered: {
     flex: 1,
     justifyContent: "center",

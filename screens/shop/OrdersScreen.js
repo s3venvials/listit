@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { ActivityIndicator, Colors, Text } from "react-native-paper";
 
 import OrderItem from "../../components/shop/OrderItem";
+import AppBarBottom from "../../components/UI/AppBarBottom";
 
 import * as ordersActions from "../../store/actions/order";
 
@@ -14,11 +15,12 @@ const OrderScreen = () => {
 
   useEffect(() => {
     dispatch(ordersActions.fetchOrders())
-    .then(() => {
-      setIsLoading(false);
-    }).catch(err => {
-      setIsLoading(false);
-    });
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        setIsLoading(false);
+      });
   }, [dispatch]);
 
   if (isLoading) {
@@ -38,21 +40,25 @@ const OrderScreen = () => {
       <View style={styles.centered}>
         <Text>Nothing here, go find some cool stuff!</Text>
       </View>
-    )
+    );
   }
 
   return (
-    <FlatList
-      data={orders}
-      keyExtractor={(item) => item.id}
-      renderItem={(itemData) => (
-        <OrderItem
-          amount={itemData.item.totalAmount}
-          date={itemData.item.readableDate}
-          items={itemData.item.items}
-        />
-      )}
-    />
+    <View style={{ height: "100%" }}>
+      <FlatList
+        style={{ marginBottom: 80 }}
+        data={orders}
+        keyExtractor={(item) => item.id}
+        renderItem={(itemData) => (
+          <OrderItem
+            amount={itemData.item.totalAmount}
+            date={itemData.item.readableDate}
+            items={itemData.item.items}
+          />
+        )}
+      />
+      <AppBarBottom />
+    </View>
   );
 };
 

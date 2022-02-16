@@ -5,7 +5,7 @@ import {
   View,
   KeyboardAvoidingView,
 } from "react-native";
-import { Surface, Text, TextInput, Button, Colors } from "react-native-paper";
+import { Text, TextInput, Button, Colors } from "react-native-paper";
 import { useDispatch } from "react-redux";
 
 import * as authActions from "../../store/actions/auth";
@@ -40,6 +40,7 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = ({ navigation }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [formIsSubmitted, setFormIsSubmitted] = useState(false);
   const dispatch = useDispatch();
 
@@ -58,23 +59,6 @@ const AuthScreen = ({ navigation }) => {
     );
   };
 
-  const loginHandler = async () => {
-    setFormIsSubmitted(true);
-
-    if (!formState.formIsValid) {
-      return;
-    }
-
-    await dispatch(
-      authActions.login(
-        formState.inputValues.email,
-        formState.inputValues.password
-      )
-    );
-
-    navigation.navigate("All Products");
-  }
-
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       email: "",
@@ -86,6 +70,27 @@ const AuthScreen = ({ navigation }) => {
     },
     formIsValid: false,
   });
+
+  const loginHandler = async () => {
+    setFormIsSubmitted(true);
+    setIsLoading(true);
+
+    if (!formState.formIsValid) {
+      setIsLoading(false);
+      return;
+    }
+
+    await dispatch(
+      authActions.login(
+        formState.inputValues.email,
+        formState.inputValues.password
+      )
+    );
+
+    setIsLoading(false);
+
+    navigation.navigate("All Products");
+  };
 
   const textChangeHandler = (name, value) => {
     let isValid = false;
@@ -103,9 +108,11 @@ const AuthScreen = ({ navigation }) => {
       keyboardVerticalOffset={50}
       style={styles.screen}
     >
-      <Surface style={styles.surface}>
+      <View style={styles.surface}>
         <ScrollView>
+          <Text style={styles.title}>ListIt</Text>
           <TextInput
+            style={styles.textInput}
             mode="outlined"
             id="email"
             label="Email"
@@ -118,6 +125,7 @@ const AuthScreen = ({ navigation }) => {
             <Text style={{ color: "red" }}>Please enter a valid email</Text>
           )}
           <TextInput
+            style={styles.textInput}
             mode="outlined"
             id="password"
             label="Password"
@@ -131,17 +139,26 @@ const AuthScreen = ({ navigation }) => {
             <Text style={{ color: "red" }}>Please enter a valid password</Text>
           )}
           <View style={styles.btnGroup}>
-            <Button mode="contained" color={Colors.blue500} onPress={loginHandler}>
+            <Button
+              loading={isLoading}
+              mode="contained"
+              color={Colors.blue500}
+              onPress={loginHandler}
+            >
               Login
             </Button>
           </View>
           <View style={styles.btnGroup}>
-            <Button mode="contained" color={Colors.cyan500} onPress={signupHandler}>
+            <Button
+              mode="text"
+              color={Colors.purple500}
+              onPress={signupHandler}
+            >
               Sign Up
             </Button>
           </View>
         </ScrollView>
-      </Surface>
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -150,14 +167,22 @@ const styles = StyleSheet.create({
   screen: {
     margin: 6,
   },
+  title: {
+    textAlign: "center",
+    fontFamily: "open-sans-bold",
+    fontSize: 36,
+  },
   surface: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 20,
+    marginTop: '50%',
     padding: 10,
     elevation: 6,
   },
+  textInput: {
+    marginVertical: 5,
+  },  
   btnGroup: {
     marginTop: 10,
   },
