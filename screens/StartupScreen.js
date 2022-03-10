@@ -29,7 +29,7 @@ const StartupScreen = ({ navigation }) => {
         }
 
         navigation.navigate("All Products");
-        dispatch(authActions.authenticate(userId, token));
+        dispatch(authActions.authenticate(userId, token, expireDate));
       } catch (error) {
         alert(error);
       }

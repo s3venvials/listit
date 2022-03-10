@@ -4,6 +4,8 @@ import { Surface, Button, TextInput, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import * as productsActions from "../../store/actions/products";
 
+import ImagePicker from "../../components/UI/ImagePicker";
+
 const FORM_UPDATE = "UPDATE";
 
 const formReducer = (state, action) => {
@@ -120,13 +122,14 @@ const EditProductScreen = ({ navigation, route }) => {
           {!formState.inputValidities.title && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please enter a valid title</Text>
           )}
-          <TextInput
+          {/* <TextInput
             style={styles.input}
             mode="outlined"
             label="Image URL"
             value={formState.inputValues.imageUrl}
             onChangeText={textChangeHandler.bind(this, "imageUrl")}
-          />
+          /> */}
+          <ImagePicker />
           {!formState.inputValidities.imageUrl && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please add an image</Text>
           )}

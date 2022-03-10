@@ -28,7 +28,6 @@ import productsReducer from "./store/reducers/products";
 import cartReducer from "./store/reducers/cart";
 import ordersReducer from "./store/reducers/order";
 import authReducer from "./store/reducers/auth";
-import { View } from "react-native";
 
 const rootReducer = combineReducers({
   products: productsReducer,
@@ -51,7 +50,7 @@ const theme = {
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: Colors.green600,
+    primary: Colors.blue600,
     accent: "#f1c40f",
   },
 };

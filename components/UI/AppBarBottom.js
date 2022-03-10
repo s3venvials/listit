@@ -33,6 +33,12 @@ const AppBarBottom = () => {
     <Appbar style={styles.bottom}>
       <View style={styles.actions}>
         <Appbar.Action
+          icon="home"
+          onPress={() => navigation.navigate("All Products")}
+        />
+      </View>
+      <View style={styles.actions}>
+        <Appbar.Action
           icon="account"
           onPress={() => console.log("Pressed account")}
         />
@@ -61,12 +67,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: 76,
+    height: 60,
   },
   actions: {
     flexDirection: "row",
     justifyContent: "space-evenly",
     alignItems: "center",
-    margin: "10%",
+    margin: "6%",
   },
 });

@@ -2,13 +2,17 @@ import React, { useState, useEffect, useCallback } from "react";
 import { FlatList, View, StyleSheet } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, ActivityIndicator, Colors, Text } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import SnackBarAlert from "../../components/UI/SnackBarAlert";
-
 import ProductItem from "../../components/shop/ProductItem";
+import AppBarBottom from "../../components/UI/AppBarBottom";
+import Search from "../../components/UI/Search";
+import Categories from "../../components/UI/Categories";
+
 import * as cartActions from "../../store/actions/cart";
 import * as productActions from "../../store/actions/products";
-import AppBarBottom from "../../components/UI/AppBarBottom";
+import * as authActions from "../../store/actions/auth";
 
 const ProductOverviewScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -24,6 +28,9 @@ const ProductOverviewScreen = ({ navigation }) => {
     setIsRefreshing(true);
     setTimeout(async () => {
       try {
+        const user = await AsyncStorage.getItem("userData");
+        const { userId, token, expiresIn } = JSON.parse(user);
+        dispatch(authActions.authenticate(userId, token, expiresIn));
         dispatch(productActions.fetchProducts());
       } catch (error) {
         setError(error.message);
@@ -102,41 +109,52 @@ const ProductOverviewScreen = ({ navigation }) => {
   }
 
   return (
-    <View>
+    <View style={{ height: '100%' }}>
+      <Search placeHolder="Search Everything" />
+      <Categories />
       <FlatList
         style={styles.fixedList}
         onRefresh={loadProducts}
         refreshing={isRefreshing}
         data={products}
+        numColumns={2}
         keyExtractor={(item) => item.id}
         renderItem={(itemData) => (
-          <ProductItem
-            product={itemData.item}
-            onSelect={() => {
-              selectItemHandler(itemData.item.id, itemData.item.title);
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              margin: 1,
             }}
           >
-            <Button
-              color={Colors.blue500}
-              mode="outlined"
-              onPress={() => {
+            <ProductItem
+              product={itemData.item}
+              onSelect={() => {
                 selectItemHandler(itemData.item.id, itemData.item.title);
               }}
             >
-              Details
-            </Button>
-            <Button
-              color={Colors.blue500}
-              mode="outlined"
-              onPress={() => {
-                setVisible(true);
-                setMessage(`Added ${itemData.item.title} to the cart!`);
-                dispatch(cartActions.addToCart(itemData.item));
-              }}
-            >
-              Add To Cart
-            </Button>
-          </ProductItem>
+              {/* <Button
+                color={Colors.blue500}
+                mode="outlined"
+                onPress={() => {
+                  selectItemHandler(itemData.item.id, itemData.item.title);
+                }}
+              >
+                Details
+              </Button> */}
+              {/* <Button
+                color={Colors.blue500}
+                mode="outlined"
+                onPress={() => {
+                  setVisible(true);
+                  setMessage(`Added ${itemData.item.title} to the cart!`);
+                  dispatch(cartActions.addToCart(itemData.item));
+                }}
+              >
+                Add To Cart
+              </Button> */}
+            </ProductItem>
+          </View>
         )}
       />
       <SnackBarAlert
@@ -152,7 +170,7 @@ const ProductOverviewScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   fixedList: {
-    marginBottom: 76,
+    marginBottom: 66,
   },
   centered: {
     flex: 1,

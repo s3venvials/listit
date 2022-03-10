@@ -37,20 +37,20 @@ const ProductItem = ({ product, onSelect, children }) => {
 
 const styles = StyleSheet.create({
   surface: {
-    paddingBottom: 6,
+    // paddingBottom: 6,
     elevation: 6,
-    marginVertical: 10,
-    marginHorizontal: 10,
+    marginVertical: 4,
+    marginHorizontal: 8,
     borderRadius: 10,
   },
   content: {
     alignItems: "center",
-    padding: 10,
+    // padding: 1,
   },
   title: {
     fontFamily: 'open-sans-bold',
-    fontSize: 18,
-    marginVertical: 2,
+    fontSize: 14,
+    // marginVertical: 2,
     alignContent: "center",
   },
   price: {

@@ -7,7 +7,7 @@ export const SET_PRODUCTS = "SET_PRODUCTS";
 
 export const fetchProducts = () => {
   return async (dispatch, getState) => {
-    const userId = getState().auth.userId;
+    const { userId } = getState().auth;
     try {
       const response = await fetch(
         "https://listit-1358-default-rtdb.firebaseio.com/products.json"

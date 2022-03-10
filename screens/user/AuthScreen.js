@@ -80,14 +80,14 @@ const AuthScreen = ({ navigation }) => {
       return;
     }
 
+    setIsLoading(false);
+
     await dispatch(
       authActions.login(
         formState.inputValues.email,
         formState.inputValues.password
       )
     );
-
-    setIsLoading(false);
 
     navigation.navigate("All Products");
   };
@@ -176,13 +176,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginTop: '50%',
+    marginTop: "50%",
     padding: 10,
     elevation: 6,
   },
   textInput: {
     marginVertical: 5,
-  },  
+  },
   btnGroup: {
     marginTop: 10,
   },

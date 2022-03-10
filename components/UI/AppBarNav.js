@@ -4,12 +4,17 @@ import { View, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useSelector } from "react-redux";
 
+import LocationView from "../UI/Location";
+
 const MORE_ICON = Platform.OS === "ios" ? "dots-horizontal" : "dots-vertical";
 
 const AppBarHeader = ({ navigation, back }) => {
   const [visible, setVisible] = useState(false);
+  const [showLoc, setShowLoc] = useState(false);
   const openMenu = () => setVisible(true);
   const closeMenu = () => setVisible(false);
+  const openLocMenu = () => setShowLoc(true);
+  const closeLocMenu = () => setShowLoc(false);
   const _goBack = () => navigation.goBack();
   const _goToCart = () => navigation.navigate("Cart");
   const navName =
@@ -53,51 +58,74 @@ const AppBarHeader = ({ navigation, back }) => {
               >
                 {cartItemsCount}
               </Badge>
-              <Appbar.Action icon="cart" onPress={_goToCart} />
+              <Appbar.Action color="white" icon="cart" onPress={_goToCart} />
             </View>
           )}
           {user.current && (
-            <Menu
-              style={{
-                paddingTop: 40,
-                flexDirection: "row",
-                justifyContent: "center",
-              }}
-              visible={visible}
-              onDismiss={closeMenu}
-              anchor={
-                <Appbar.Action
-                  icon={MORE_ICON}
-                  color="white"
-                  onPress={openMenu}
+            <>
+              <Menu
+                style={{
+                  paddingTop: 40,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                }}
+                visible={visible}
+                onDismiss={closeMenu}
+                anchor={
+                  <Appbar.Action
+                    icon={MORE_ICON}
+                    color="white"
+                    onPress={openMenu}
+                  />
+                }
+              >
+                <Menu.Item
+                  icon="shopping"
+                  onPress={() => {
+                    navigation.navigate("All Products");
+                    closeMenu();
+                  }}
+                  title="Home"
                 />
-              }
-            >
-              <Menu.Item
-                icon="shopping"
-                onPress={() => {
-                  navigation.navigate("All Products");
-                  closeMenu();
+                <Menu.Item
+                  icon="history"
+                  onPress={() => {
+                    navigation.navigate("Orders");
+                    closeMenu();
+                  }}
+                  title="Orders"
+                />
+                <Menu.Item
+                  icon="playlist-edit"
+                  onPress={() => {
+                    navigation.navigate("User Products");
+                    closeMenu();
+                  }}
+                  title="User Products"
+                />
+              </Menu>
+              <Menu
+                style={{
+                  paddingTop: 40,
+                  // flexDirection: "row",
+                  // justifyContent: "flex-start",
+                  // marginRight: '70%',
                 }}
-                title="Home"
-              />
-              <Menu.Item
-                icon="history"
-                onPress={() => {
-                  navigation.navigate("Orders");
-                  closeMenu();
-                }}
-                title="Orders"
-              />
-              <Menu.Item
-                icon="playlist-edit"
-                onPress={() => {
-                  navigation.navigate("User Products");
-                  closeMenu();
-                }}
-                title="User Products"
-              />
-            </Menu>
+                visible={showLoc}
+                onDismiss={closeLocMenu}
+                anchor={
+                  <Appbar.Action
+                    icon="map-marker"
+                    color="white"
+                    onPress={openLocMenu}
+                  />
+                }
+              >
+                <View style={{ marginRight: 165, margin: 8 }}>
+                <LocationView />
+                </View>
+              </Menu>
+            </>
           )}
         </Appbar.Header>
       )}
