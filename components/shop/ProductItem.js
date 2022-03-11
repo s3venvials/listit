@@ -19,7 +19,7 @@ const ProductItem = ({ product, onSelect, children }) => {
     <View>
       <TouchableCmp onPress={onSelect} useForeground>
         <Surface style={styles.surface}>
-          <Card.Cover source={{ uri: product.imageUrl }} />
+          <Card.Cover source={{ uri: product.images[0] }} />
           <Card.Content style={styles.content}>
             <Title style={styles.title}>{product.title}</Title>
             <Paragraph style={styles.price}>
@@ -37,7 +37,6 @@ const ProductItem = ({ product, onSelect, children }) => {
 
 const styles = StyleSheet.create({
   surface: {
-    // paddingBottom: 6,
     elevation: 6,
     marginVertical: 4,
     marginHorizontal: 8,
@@ -45,12 +44,10 @@ const styles = StyleSheet.create({
   },
   content: {
     alignItems: "center",
-    // padding: 1,
   },
   title: {
     fontFamily: 'open-sans-bold',
     fontSize: 14,
-    // marginVertical: 2,
     alignContent: "center",
   },
   price: {

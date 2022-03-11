@@ -26,7 +26,7 @@ export const fetchProducts = () => {
             key,
             resData[key].ownerId,
             resData[key].title,
-            resData[key].imageUrl,
+            resData[key].images,
             resData[key].description,
             resData[key].price
           )
@@ -57,7 +57,7 @@ export const deleteProduct = (productId) => {
   };
 };
 
-export const createProduct = (title, description, imageUrl, price) => {
+export const createProduct = (title, description, images, price) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     const userId = getState().auth.userId;
@@ -69,7 +69,7 @@ export const createProduct = (title, description, imageUrl, price) => {
         body: JSON.stringify({
           title,
           description,
-          imageUrl,
+          images,
           price,
           ownerId: userId,
         }),
@@ -84,7 +84,7 @@ export const createProduct = (title, description, imageUrl, price) => {
         id: resData.name,
         title,
         description,
-        imageUrl,
+        images,
         price,
         ownerId: userId,
       },
@@ -92,7 +92,7 @@ export const createProduct = (title, description, imageUrl, price) => {
   };
 };
 
-export const updateProduct = (id, title, description, imageUrl) => {
+export const updateProduct = (id, title, description, images) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     try {
@@ -101,7 +101,7 @@ export const updateProduct = (id, title, description, imageUrl) => {
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, description, imageUrl }),
+          body: JSON.stringify({ title, description, images }),
         }
       );
 
@@ -112,7 +112,7 @@ export const updateProduct = (id, title, description, imageUrl) => {
       dispatch({
         type: UPDATE_PRODUCT,
         pid: id,
-        productData: { title, description, imageUrl },
+        productData: { title, description, images },
       });
     } catch (error) {
       console.log(error);

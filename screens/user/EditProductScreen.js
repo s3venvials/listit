@@ -55,13 +55,13 @@ const EditProductScreen = ({ navigation, route }) => {
   const [formState, dispatchFormState] = useReducer(formReducer, {
     inputValues: {
       title: editedProduct ? editedProduct.title : "",
-      imageUrl: editedProduct ? editedProduct.imageUrl : "",
+      images: editedProduct ? editedProduct.images : [],
       desc: editedProduct ? editedProduct.description : "",
       price: "",
     },
     inputValidities: {
       title: editedProduct ? true : false,
-      imageUrl: editedProduct ? true : false,
+      images: editedProduct ? true : false,
       desc: editedProduct ? true : false,
       price: editedProduct ? true : false,
     },
@@ -75,29 +75,30 @@ const EditProductScreen = ({ navigation, route }) => {
     }
 
     let message;
-    const { title, desc, imageUrl, price } = formState.inputValues;
+    const { title, desc, images, price } = formState.inputValues;
 
     if (editedProduct) {
       message = `Edited ${formState.inputValues.title} successfully!`;
       try {
-        await dispatch(productsActions.updateProduct(prodId, title, desc, imageUrl));
+        await dispatch(productsActions.updateProduct(prodId, title, desc, images));
       } catch (error) {
         alert(error);
         return;
       }
     } else {
       message = `Added ${formState.inputValues.title} successfully!`;
-      dispatch(productsActions.createProduct(title, desc, imageUrl, +price));
+      dispatch(productsActions.createProduct(title, desc, images, +price));
     }
     navigation.navigate("User Products", { message });
   };
 
   const textChangeHandler = (name, value) => {
-    let isValid = false;
+    let isValid = true;
 
-    if (value.trim().length > 0) {
-      isValid = true;
-    }
+    // TODO: Add better validation
+    // if (value.trim().length > 0) {
+    //   isValid = true;
+    // }
 
     dispatchFormState({ type: FORM_UPDATE, value, isValid, input: name });
   };
@@ -122,15 +123,8 @@ const EditProductScreen = ({ navigation, route }) => {
           {!formState.inputValidities.title && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please enter a valid title</Text>
           )}
-          {/* <TextInput
-            style={styles.input}
-            mode="outlined"
-            label="Image URL"
-            value={formState.inputValues.imageUrl}
-            onChangeText={textChangeHandler.bind(this, "imageUrl")}
-          /> */}
-          <ImagePicker />
-          {!formState.inputValidities.imageUrl && formIsSubmitted && (
+          <ImagePicker onImageAdd={textChangeHandler.bind(this, "images")} loadedImages={formState.inputValues.images} />
+          {!formState.inputValidities.images && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please add an image</Text>
           )}
           {editedProduct ? null : (

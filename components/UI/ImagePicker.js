@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Image,
   View,
@@ -11,9 +11,23 @@ import {
 import { Button, Colors } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
-export default function ImagePickerExample() {
+export default function ImagePickerExample({ onImageAdd, loadedImages }) {
   const [images, setImages] = useState([1, 2, 3, 4, 5, 6]);
   const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (loadedImages && loadedImages.length > 0) {
+      const temp = [...images];
+
+      loadedImages.forEach((i) => {
+        temp.pop();
+        temp.unshift(i);
+      });
+
+      setImages(temp);
+      setCount(count + loadedImages.length);
+    }
+  }, []);
 
   let TouchableCmp = TouchableOpacity;
 
@@ -40,22 +54,13 @@ export default function ImagePickerExample() {
       quality: 1,
     });
 
-    // No permissions request is necessary for launching the image library
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-
-    // console.log(result);
-
     if (!result.cancelled) {
       images.pop();
       const temp = [...images];
       temp.unshift(result.uri);
       setImages(temp);
       setCount(count + 1);
+      onImageAdd(temp.filter((i) => typeof i === 'string'));
     }
   };
 
