@@ -146,7 +146,7 @@ export default function _ImagePicker({ onImageAdd, loadedImages }) {
 
   return (
     <View>
-      <Text style={{ fontStyle: 'open-sans-bold', fontSize: 20, fontWeight: "bold", marginVertical: 10 }}>Upload Images</Text>
+      <Text style={{ fontFamily: 'open-sans-bold', fontSize: 20, fontWeight: "bold", marginVertical: 10 }}>Upload Images</Text>
       <DraggableFlatList
         horizontal={true}
         data={data}
@@ -154,7 +154,7 @@ export default function _ImagePicker({ onImageAdd, loadedImages }) {
         keyExtractor={(item) => item.key}
         renderItem={renderItem}
       />
-      <Text style={{ fontStyle: 'open-sans-bold', fontSize: 16, marginVertical: 10 }} >Tap a box to start adding images!</Text>
+      <Text style={{ fontFamily: 'open-sans', fontSize: 16, marginVertical: 10 }} >Tap a box to add or edit images!</Text>
     </View>
   );
 }

@@ -1,7 +1,14 @@
 import React, { useState, useRef } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { Button, Colors } from "react-native-paper";
-import { ScrollView, View, Text, Image, StyleSheet, Dimensions } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as cartActions from "../../store/actions/cart";
 
@@ -9,7 +16,7 @@ import SnackBarAlert from "../../components/UI/SnackBarAlert";
 import AppBarBottom from "../../components/UI/AppBarBottom";
 
 const ProductDetailScreen = (props) => {
-  let { width } = Dimensions.get('window')
+  let { width } = Dimensions.get("window");
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [slideIndex, setSlideIndex] = useState(0);
@@ -53,7 +60,10 @@ const ProductDetailScreen = (props) => {
           itemWidth={width}
           onSnapToItem={(index) => setSlideIndex(index)}
         />
-        <CustomPaging data={selectedProduct.images.filter((i) => i.imageUrl)} activeSlide={slideIndex} />
+        <CustomPaging
+          data={selectedProduct.images.filter((i) => i.imageUrl)}
+          activeSlide={slideIndex}
+        />
         <View style={styles.actions}>
           <Button
             mode="outlined"
@@ -69,13 +79,13 @@ const ProductDetailScreen = (props) => {
           <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
           <Text style={styles.description}>{selectedProduct.description}</Text>
         </View>
+        <SnackBarAlert
+          visible={visible}
+          setVisible={setVisible}
+          message={message}
+          sx={{ backgroundColor: "green", color: "white" }}
+        />
       </ScrollView>
-      <SnackBarAlert
-        visible={visible}
-        setVisible={setVisible}
-        message={message}
-        sx={{ backgroundColor: "green", color: "white" }}
-      />
       <AppBarBottom />
     </View>
   );
