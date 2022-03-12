@@ -10,7 +10,6 @@ import AppBarBottom from "../../components/UI/AppBarBottom";
 import Search from "../../components/UI/Search";
 import Categories from "../../components/UI/Categories";
 
-import * as cartActions from "../../store/actions/cart";
 import * as productActions from "../../store/actions/products";
 import * as authActions from "../../store/actions/auth";
 
@@ -104,6 +103,7 @@ const ProductOverviewScreen = ({ navigation }) => {
         >
           Add Product
         </Button>
+        <AppBarBottom />
       </View>
     );
   }
@@ -132,28 +132,7 @@ const ProductOverviewScreen = ({ navigation }) => {
               onSelect={() => {
                 selectItemHandler(itemData.item.id, itemData.item.title);
               }}
-            >
-              {/* <Button
-                color={Colors.blue500}
-                mode="outlined"
-                onPress={() => {
-                  selectItemHandler(itemData.item.id, itemData.item.title);
-                }}
-              >
-                Details
-              </Button> */}
-              {/* <Button
-                color={Colors.blue500}
-                mode="outlined"
-                onPress={() => {
-                  setVisible(true);
-                  setMessage(`Added ${itemData.item.title} to the cart!`);
-                  dispatch(cartActions.addToCart(itemData.item));
-                }}
-              >
-                Add To Cart
-              </Button> */}
-            </ProductItem>
+            />
           </View>
         )}
       />

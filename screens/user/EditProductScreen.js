@@ -1,5 +1,12 @@
 import React, { useState, useReducer } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  ScrollView,
+} from "react-native";
 import { Surface, Button, TextInput, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import * as productsActions from "../../store/actions/products";
@@ -80,7 +87,9 @@ const EditProductScreen = ({ navigation, route }) => {
     if (editedProduct) {
       message = `Edited ${formState.inputValues.title} successfully!`;
       try {
-        await dispatch(productsActions.updateProduct(prodId, title, desc, images));
+        await dispatch(
+          productsActions.updateProduct(prodId, title, desc, images)
+        );
       } catch (error) {
         alert(error);
         return;
@@ -96,16 +105,24 @@ const EditProductScreen = ({ navigation, route }) => {
     let isValid = true;
 
     // TODO: Add better validation
-    // if (value.trim().length > 0) {
-    //   isValid = true;
-    // }
+    if (value.trim().length > 0) {
+      isValid = true;
+    }
 
     dispatchFormState({ type: FORM_UPDATE, value, isValid, input: name });
   };
 
+  const imageChangeHandler = (name, value) => {
+    let isValid = true;
+    dispatchFormState({ type: FORM_UPDATE, value, isValid, input: name });
+  };
+
   return (
-    <ScrollView>
-      <View style={styles.form}>
+    <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : ""}
+        style={styles.container}
+      >
         <Surface style={styles.formControl}>
           <Text style={styles.title}>
             {navParams.type === "Add" ? "Add New Product" : "Edit Product"}
@@ -123,7 +140,10 @@ const EditProductScreen = ({ navigation, route }) => {
           {!formState.inputValidities.title && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please enter a valid title</Text>
           )}
-          <ImagePicker onImageAdd={textChangeHandler.bind(this, "images")} loadedImages={formState.inputValues.images} />
+          <ImagePicker
+            onImageAdd={imageChangeHandler.bind(this, "images")}
+            loadedImages={formState.inputValues.images}
+          />
           {!formState.inputValidities.images && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please add an image</Text>
           )}
@@ -137,7 +157,7 @@ const EditProductScreen = ({ navigation, route }) => {
               keyboardType="decimal-pad"
             />
           )}
-           {!formState.inputValidities.price && formIsSubmitted && (
+          {!formState.inputValidities.price && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please enter a valid price</Text>
           )}
           <TextInput
@@ -152,19 +172,29 @@ const EditProductScreen = ({ navigation, route }) => {
             autoCapitalize="sentences"
             autoCorrect
           />
-           {!formState.inputValidities.desc && formIsSubmitted && (
-            <Text style={{ color: "red", marginBottom: 10 }}>Please enter a description</Text>
+          {!formState.inputValidities.desc && formIsSubmitted && (
+            <Text style={{ color: "red", marginBottom: 10 }}>
+              Please enter a description
+            </Text>
           )}
-          <Button color={Colors.blue500} mode="contained" icon="send" onPress={submitHandler}>
+          <Button
+            color={Colors.blue500}
+            mode="contained"
+            icon="send"
+            onPress={submitHandler}
+          >
             Submit
           </Button>
         </Surface>
-      </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   title: {
     fontFamily: "open-sans-bold",
     fontSize: 18,

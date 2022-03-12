@@ -39,6 +39,7 @@ const OrderScreen = () => {
     return (
       <View style={styles.centered}>
         <Text>Nothing here, go find some cool stuff!</Text>
+        <AppBarBottom />
       </View>
     );
   }

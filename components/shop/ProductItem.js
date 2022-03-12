@@ -19,7 +19,7 @@ const ProductItem = ({ product, onSelect, children }) => {
     <View>
       <TouchableCmp onPress={onSelect} useForeground>
         <Surface style={styles.surface}>
-          <Card.Cover source={{ uri: product.images[0] }} />
+          <Card.Cover source={{ uri: product.images[0].imageUrl }} />
           <Card.Content style={styles.content}>
             <Title style={styles.title}>{product.title}</Title>
             <Paragraph style={styles.price}>

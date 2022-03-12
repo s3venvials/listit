@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import { Button, Colors } from "react-native-paper";
-import { ScrollView, View, Text, Image, StyleSheet } from "react-native";
+import { ScrollView, View, Text, Image, StyleSheet, Dimensions } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as cartActions from "../../store/actions/cart";
 
@@ -9,6 +9,7 @@ import SnackBarAlert from "../../components/UI/SnackBarAlert";
 import AppBarBottom from "../../components/UI/AppBarBottom";
 
 const ProductDetailScreen = (props) => {
+  let { width } = Dimensions.get('window')
   const [visible, setVisible] = useState(false);
   const [message, setMessage] = useState("");
   const [slideIndex, setSlideIndex] = useState(0);
@@ -36,7 +37,7 @@ const ProductDetailScreen = (props) => {
   const RenderItem = ({ item, index }) => {
     return (
       <View>
-        <Image style={styles.image} source={{ uri: item }} />
+        <Image style={styles.image} source={{ uri: item.imageUrl }} />
       </View>
     );
   };
@@ -46,13 +47,13 @@ const ProductDetailScreen = (props) => {
       <ScrollView style={{ marginBottom: 66 }}>
         <Carousel
           ref={carouselRef}
-          data={selectedProduct.images}
+          data={selectedProduct.images.filter((i) => i.imageUrl)}
           renderItem={RenderItem}
-          sliderWidth={400}
-          itemWidth={400}
+          sliderWidth={width}
+          itemWidth={width}
           onSnapToItem={(index) => setSlideIndex(index)}
         />
-        <CustomPaging data={selectedProduct.images} activeSlide={slideIndex} />
+        <CustomPaging data={selectedProduct.images.filter((i) => i.imageUrl)} activeSlide={slideIndex} />
         <View style={styles.actions}>
           <Button
             mode="outlined"
