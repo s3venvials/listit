@@ -6,7 +6,7 @@ import { Text, View, StyleSheet, TouchableOpacity, Image } from "react-native";
 import DraggableFlatList, {
   ScaleDecorator,
 } from "react-native-draggable-flatlist";
-import { Button } from "react-native-paper";
+import { Colors } from "react-native-paper";
 import * as ImagePicker from "expo-image-picker";
 
 // const firebaseConfig = {
@@ -22,21 +22,12 @@ import * as ImagePicker from "expo-image-picker";
 // }
 
 const NUM_ITEMS = 6;
-function getColor(i) {
-  const multiplier = 255 / (NUM_ITEMS - 1);
-  const colorVal = i * multiplier;
-  return `rgb(${colorVal}, ${Math.abs(128 - colorVal)}, ${255 - colorVal})`;
-}
 
 const initialData = [...Array(NUM_ITEMS)].map((d, index) => {
-  const backgroundColor = getColor(index);
   return {
     key: `item-${index + 1}`,
-    label: String(index + 1) + "",
-    height: 100,
-    width: 100 + Math.random() * 40,
+    label: index === 0 ? "Default" : "",
     imageUrl: null,
-    backgroundColor,
   };
 });
 
@@ -131,7 +122,7 @@ export default function _ImagePicker({ onImageAdd, loadedImages }) {
           disabled={isActive}
           style={[
             styles.rowItem,
-            { backgroundColor: isActive ? "red" : item.backgroundColor },
+            { backgroundColor: isActive ? Colors.grey700 : Colors.white },
           ]}
         >
           {item.imageUrl ? (
@@ -165,11 +156,14 @@ const styles = StyleSheet.create({
     width: 100,
     alignItems: "center",
     justifyContent: "center",
+    borderWidth: 1,
+    borderColor: Colors.grey400,
+    marginRight: 8,
   },
   text: {
-    color: "white",
-    fontSize: 24,
-    fontWeight: "bold",
+    color: "black",
+    fontSize: 18,
+    fontFamily: 'open-sans',
     textAlign: "center",
   },
   images: {

@@ -1,17 +1,17 @@
 import React, { useState, useReducer } from "react";
 import {
-  View,
   Text,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   ScrollView,
 } from "react-native";
 import { Surface, Button, TextInput, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigation } from "@react-navigation/native";
 import * as productsActions from "../../store/actions/products";
 
 import ImagePicker from "../../components/UI/ImagePicker";
+import CategoryList from "../../components/UI/CategoryList";
 
 const FORM_UPDATE = "UPDATE";
 
@@ -42,9 +42,11 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const EditProductScreen = ({ navigation, route }) => {
+const EditProductScreen = ({ route }) => {
+  const navigation = useNavigation();
   const prodId = route.params.productId;
   let editedProduct;
+  const [showCategoryList, setShowCategoryList] = useState(false);
 
   if (prodId) {
     editedProduct = useSelector((state) =>
@@ -63,12 +65,14 @@ const EditProductScreen = ({ navigation, route }) => {
     inputValues: {
       title: editedProduct ? editedProduct.title : "",
       images: editedProduct ? editedProduct.images : [],
+      category: editedProduct ? editedProduct.category : "",
       desc: editedProduct ? editedProduct.description : "",
       price: "",
     },
     inputValidities: {
       title: editedProduct ? true : false,
       images: editedProduct ? true : false,
+      category: editedProduct ? true : false,
       desc: editedProduct ? true : false,
       price: editedProduct ? true : false,
     },
@@ -82,13 +86,13 @@ const EditProductScreen = ({ navigation, route }) => {
     }
 
     let message;
-    const { title, desc, images, price } = formState.inputValues;
+    const { title, desc, images, category, price } = formState.inputValues;
 
     if (editedProduct) {
       message = `Edited ${formState.inputValues.title} successfully!`;
       try {
         await dispatch(
-          productsActions.updateProduct(prodId, title, desc, images)
+          productsActions.updateProduct(prodId, title, desc, images, category)
         );
       } catch (error) {
         alert(error);
@@ -96,7 +100,9 @@ const EditProductScreen = ({ navigation, route }) => {
       }
     } else {
       message = `Added ${formState.inputValues.title} successfully!`;
-      dispatch(productsActions.createProduct(title, desc, images, +price));
+      dispatch(
+        productsActions.createProduct(title, desc, images, category, +price)
+      );
     }
     navigation.navigate("User Products", { message });
   };
@@ -116,6 +122,20 @@ const EditProductScreen = ({ navigation, route }) => {
     let isValid = true;
     dispatchFormState({ type: FORM_UPDATE, value, isValid, input: name });
   };
+
+  const handlePickedCategory = (value) => {
+    setShowCategoryList(false);
+    textChangeHandler("category", value);
+  };
+
+  if (showCategoryList) {
+    return (
+      <CategoryList
+        onPickedCategory={handlePickedCategory}
+        onBackArrow={() => setShowCategoryList(false)}
+      />
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -146,6 +166,20 @@ const EditProductScreen = ({ navigation, route }) => {
           />
           {!formState.inputValidities.images && formIsSubmitted && (
             <Text style={{ color: "red" }}>Please add an image</Text>
+          )}
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            label="Category"
+            value={formState.inputValues.category}
+            onChangeText={textChangeHandler.bind(this, "category")}
+            keyboardType="default"
+            autoCapitalize="sentences"
+            autoCorrect
+            onPressIn={() => setShowCategoryList(true)}
+          />
+          {!formState.inputValidities.category && formIsSubmitted && (
+            <Text style={{ color: "red" }}>Please enter a category</Text>
           )}
           {editedProduct ? null : (
             <TextInput

@@ -25,6 +25,7 @@ export default (state = initialState, action) => {
         action.productData.ownerId,
         action.productData.title,
         action.productData.images,
+        action.productData.category,
         action.productData.description,
         action.productData.price
       );
@@ -42,6 +43,7 @@ export default (state = initialState, action) => {
         state.userProducts[productIndex].ownerId,
         action.productData.title,
         action.productData.images,
+        action.productData.category,
         action.productData.description,
         state.userProducts[productIndex].price
       );

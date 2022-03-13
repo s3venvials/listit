@@ -71,7 +71,7 @@ const AuthScreen = ({ navigation }) => {
     formIsValid: false,
   });
 
-  const loginHandler = async () => {
+  const loginHandler = () => {
     setFormIsSubmitted(true);
     setIsLoading(true);
 
@@ -82,7 +82,7 @@ const AuthScreen = ({ navigation }) => {
 
     setIsLoading(false);
 
-    await dispatch(
+    dispatch(
       authActions.login(
         formState.inputValues.email,
         formState.inputValues.password

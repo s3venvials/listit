@@ -10,8 +10,12 @@ const StartupScreen = ({ navigation }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let isActive = true;
+
     const tryLogin = async () => {
       try {
+        if (!isActive) return;
+        
         const userData = await AsyncStorage.getItem("userData");
         if (!userData) {
           navigation.navigate("Auth Login");
@@ -31,10 +35,15 @@ const StartupScreen = ({ navigation }) => {
         navigation.navigate("All Products");
         dispatch(authActions.authenticate(userId, token, expireDate));
       } catch (error) {
-        alert(error);
+        navigation.navigate("Auth Login");
       }
     };
+
     tryLogin();
+
+    return () => {
+      isActive = false;
+    }
   }, [dispatch]);
 
   return (

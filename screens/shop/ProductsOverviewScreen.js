@@ -32,7 +32,7 @@ const ProductOverviewScreen = ({ navigation }) => {
         dispatch(authActions.authenticate(userId, token, expiresIn));
         dispatch(productActions.fetchProducts());
       } catch (error) {
-        setError(error.message);
+        navigation.navigate("Startup");
       }
       setIsRefreshing(false);
     }, 600);
@@ -89,7 +89,7 @@ const ProductOverviewScreen = ({ navigation }) => {
   if (!isLoading && products.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>Nothing here.... your the first!</Text>
+        <Text style={styles.text}>Nothing here.... your the first!</Text>
         <Button
           color={Colors.blue500}
           mode="contained"
@@ -101,7 +101,7 @@ const ProductOverviewScreen = ({ navigation }) => {
             })
           }
         >
-          Add Product
+          Add Product To Sell
         </Button>
         <AppBarBottom />
       </View>
@@ -156,6 +156,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  text: {
+    fontFamily: 'open-sans',
+    fontSize: 18,
+  }
 });
 
 export default ProductOverviewScreen;

@@ -38,7 +38,7 @@ const OrderScreen = () => {
   if (!isLoading && orders.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>Nothing here, go find some cool stuff!</Text>
+        <Text style={styles.text}>Nothing here, go find some cool stuff!</Text>
         <AppBarBottom />
       </View>
     );
@@ -69,6 +69,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  text: {
+    fontFamily: 'open-sans',
+    fontSize: 16,
+  }
 });
 
 export default OrderScreen;

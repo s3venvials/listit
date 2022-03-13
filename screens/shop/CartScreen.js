@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, StyleSheet, ScrollView } from "react-native";
+import { View, Text, FlatList, StyleSheet } from "react-native";
 import { Button, Surface, Colors } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 

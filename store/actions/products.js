@@ -27,6 +27,7 @@ export const fetchProducts = () => {
             resData[key].ownerId,
             resData[key].title,
             resData[key].images,
+            resData[key].category,
             resData[key].description,
             resData[key].price
           )
@@ -57,7 +58,7 @@ export const deleteProduct = (productId) => {
   };
 };
 
-export const createProduct = (title, description, images, price) => {
+export const createProduct = (title, description, images, category, price) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     const userId = getState().auth.userId;
@@ -70,6 +71,7 @@ export const createProduct = (title, description, images, price) => {
           title,
           description,
           images,
+          category,
           price,
           ownerId: userId,
         }),
@@ -85,6 +87,7 @@ export const createProduct = (title, description, images, price) => {
         title,
         description,
         images,
+        category,
         price,
         ownerId: userId,
       },
@@ -92,7 +95,7 @@ export const createProduct = (title, description, images, price) => {
   };
 };
 
-export const updateProduct = (id, title, description, images) => {
+export const updateProduct = (id, title, description, images, category) => {
   return async (dispatch, getState) => {
     const token = getState().auth.token;
     try {
@@ -112,10 +115,9 @@ export const updateProduct = (id, title, description, images) => {
       dispatch({
         type: UPDATE_PRODUCT,
         pid: id,
-        productData: { title, description, images },
+        productData: { title, description, images, category },
       });
     } catch (error) {
-      console.log(error);
       throw error;
     }
   };
